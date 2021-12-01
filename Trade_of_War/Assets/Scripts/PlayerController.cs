@@ -11,19 +11,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     public bool canMove;
     public bool finishedMovement;
-    public bool isGrounded = true;
-    public Vector3 velocity;
-
-    public Transform groundCheck;
-    public float groundDistance;
-    public LayerMask groundLayer;
 
     public Vector3 targetPosition = Vector3.zero;
     public Vector3 playerMove = Vector3.zero;
     public float playerToPointDistance;
-
-    public float gravity;
-    public float height;
+    public float remainingDistance;
     public bool isDead;
     public bool IsDead
     {
@@ -41,9 +33,6 @@ public class PlayerController : MonoBehaviour
         if (!IsDead)
         {
             MoveThePlayer();
-            velocity.y += gravity * Time.deltaTime;
-            cc.Move(velocity * Time.deltaTime);
-            CalculateHeight();
             CheckIfFinishedMovement();
             cc.Move(playerMove);
 
@@ -54,15 +43,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    void CalculateHeight()
-    {
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f;
-        }
-
-
-    }
+   
     void CheckIfFinishedMovement()
     {
         if (!finishedMovement)
@@ -74,7 +55,6 @@ public class PlayerController : MonoBehaviour
             else
             {
                 MoveThePlayer();
-                playerMove.y = height * Time.deltaTime;
             }
 
         }
@@ -88,10 +68,10 @@ public class PlayerController : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider is TerrainCollider)
+                if (hit.collider.CompareTag("Ground"))
                 {
                     playerToPointDistance = Vector3.Distance(transform.position, hit.point);
-                    if (playerToPointDistance >= .2f)
+                    if (playerToPointDistance >= .5f)
                     {
                         canMove = true;
                         targetPosition = hit.point;
@@ -111,7 +91,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = quaternion;
 
             playerMove = transform.forward * moveSpeed * Time.deltaTime;
-            if (Vector3.Distance(transform.position, targetPosition) <= .15f)
+            if (Vector3.Distance(transform.position, targetPosition) <= remainingDistance)
             {
                 canMove = false;
                 playerMove.Set(0f, 0f, 0f);
