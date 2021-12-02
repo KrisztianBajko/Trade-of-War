@@ -67,12 +67,12 @@ public class SpawnManager : MonoBehaviour
 
         waveCountDown = timeBetweenWaves;
 
-        if(nextWave + 1 > waves.Length - 1)
+      /*  if(nextWave + 1 > waves.Length - 1)
         {
             nextWave = 0;
         }
 
-        nextWave++;
+        nextWave++;*/
     }
     bool EnemyIsAlive()
     {

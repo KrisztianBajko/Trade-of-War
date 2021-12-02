@@ -35,12 +35,7 @@ public class PlayerController : MonoBehaviour
             MoveThePlayer();
             CheckIfFinishedMovement();
             cc.Move(playerMove);
-
-
         }
-
-
-
     }
 
    
@@ -78,8 +73,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-
-
         }
         if (canMove)
         {
@@ -97,11 +90,9 @@ public class PlayerController : MonoBehaviour
                 playerMove.Set(0f, 0f, 0f);
                 animator.SetFloat("Walk", 0f);
             }
-
-
-
         }
     }
+
     public bool FinishedMovement
     {
         get
