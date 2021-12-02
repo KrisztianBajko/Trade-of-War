@@ -7,41 +7,49 @@ public class EnemyController : MonoBehaviour
     //referencies
     private NavMeshAgent agent;
     private Animator anim;
-    private BaseHealth baseHealth;
+    private BaseHealth enemyBaseHealth;
     private PlayerHealth playerHealth;
     private EnemyHealth enemyHealth;
-
+    // reference for enemy base
+    private GameObject enemyBase;
     // current target
-    private GameObject target;
+    private GameObject currentTarget;
     // player reference
     private GameObject player;
     // reference for waypoints
     private GameObject[] waypoints;
     // current waypoint
-    private GameObject friendlyBase;
     private int currentWaypoint;
     // distance beetwee player and enemy
     private float distanceToPlayer;
-    // distance beetwee the scroll holder and enemy
-    private float distanceToScroll;
-    // distance from the lane and enemy
+    // distance beetwee the enemy base and the minion
+    private float distanceToBase;
+    // distance from the lane and the minion
     private float distanceToLane;
     // check if the player is evade
     private bool evade;
-
-
+    [Tooltip("Run animation speed multiplier.")]
     public float moveSpeed;
+    [Tooltip("Attack animation speed multiplier.")]
     public float attackSpeed;
+    [Tooltip("Raduis for searching for target.")]
     public float searchRadius;
+    [Tooltip("How fast the minion can turn to the target direction.")]
     public float rotationSpeed;
+    [Tooltip("The attack range.")]
     public float attackRadius;
+    [Tooltip("Damage amount the minion can cause.")]
     public float damage;
+    [Tooltip("Defind how far the minion can go from lane befor it turns back.")]
+    public float acceptableDistanceFromLane;
+    [Tooltip("Defind how far the playe has to be in order for the minion to continue its path.")]
+    public float acceptableDistanceFromPlayer;
     private void Start()
     {
-        // find the scroll holder by name
-        friendlyBase = GameObject.Find("FriendlyBase");
-        // reference for scroll script
-        baseHealth = friendlyBase.GetComponent<BaseHealth>();
+        
+        enemyBase = GameObject.Find("FriendlyBase");
+
+        enemyBaseHealth = enemyBase.GetComponent<BaseHealth>();
         // find player by name
         player = GameObject.FindGameObjectWithTag("Player");
         //reference for player health script
@@ -76,18 +84,18 @@ public class EnemyController : MonoBehaviour
         {
             if (evade)
             {
-                target = waypoints[currentWaypoint];
+                currentTarget = waypoints[currentWaypoint];
             }
             else
             {
                 ChasePlayer();
             }
         }
-        // if the distance between the scroll holder and the enemy is less then the search raduis and the scroll is still standning
-        // attack the scroll holder otherwise just stop the agent
-        else if (distanceToScroll < searchRadius)
+        // if the distance between the enemy base and the enemy is less then the search raduis and the base is still standning
+        // attack the enemy base, otherwise just stop the agent
+        else if (distanceToBase < searchRadius)
         {
-            if (!baseHealth.isStanding)
+            if (!enemyBaseHealth.isStanding)
             {
                 agent.isStopped = true;
                 anim.SetBool("isAttacking", false);
@@ -95,7 +103,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                AttackTheScrollHolder();
+                AttackTheEnemyBase();
             }
         }
         // if the targets are not close enough then follow the path
@@ -106,16 +114,16 @@ public class EnemyController : MonoBehaviour
         // look at the target the enemy goes 
         LookAt();
         // set the destination to target position
-        agent.SetDestination(target.transform.position);
+        agent.SetDestination(currentTarget.transform.position);
     }
     void CheckDistance()
     {
         // check the distance between the targets and the enemy
         distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        distanceToScroll = Vector3.Distance(transform.position, friendlyBase.transform.position);
+        distanceToBase = Vector3.Distance(transform.position, enemyBase.transform.position);
         distanceToLane = Vector3.Distance(transform.position, waypoints[currentWaypoint].transform.position);
         // check if the enemy is too far from the lane so it will goes back 
-        if (distanceToLane > 35f)
+        if (distanceToLane > acceptableDistanceFromLane)
         {
             evade = true;
         }
@@ -124,33 +132,33 @@ public class EnemyController : MonoBehaviour
     {
         // if the player is not dead or the player is too far from enemy then go back to lane
         // otherwise chase the player and attack
-        if (playerHealth.isDead || distanceToPlayer > 10f)
+        if (playerHealth.isDead || distanceToPlayer > acceptableDistanceFromPlayer)
         {
             anim.SetBool("isAttacking", false);
             anim.SetBool("isRunning", true);
-            target = waypoints[currentWaypoint];
+            currentTarget = waypoints[currentWaypoint];
         }
         else
         {
-            target = player;
-            if (target == player)
+            currentTarget = player;
+            if (currentTarget == player)
             {
                 Attack();
             }
         }
     }
-    void AttackTheScrollHolder()
+    void AttackTheEnemyBase()
     {
-        // if the target is the scroll holder then attack 
-        target = friendlyBase;
-        if (target == friendlyBase)
+        // if the target is the enemy base then attack 
+        currentTarget = enemyBase;
+        if (currentTarget == enemyBase)
         {
             Attack();
         }
     }
     void FollowPath()
     {
-        // follow the path if the enemy close enough to the next waypoint then target the next waypoint
+        // follow the path if the enemy close enough to the next waypoint then target is the next waypoint
         if (agent.remainingDistance < 0.5f)
         {
             evade = false;
@@ -160,18 +168,18 @@ public class EnemyController : MonoBehaviour
         {
             currentWaypoint = 0;
         }
-        target = waypoints[currentWaypoint];
+        currentTarget = waypoints[currentWaypoint];
     }
     void LookAt()
     {
         // make the enemy look at the target at all time
-        Quaternion lookAt = Quaternion.LookRotation(target.transform.position - transform.position);
+        Quaternion lookAt = Quaternion.LookRotation(currentTarget.transform.position - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, rotationSpeed * Time.deltaTime);
     }
     void Attack()
     {
         // if the enemy is close enough to attack then attack the target otherwise just keep running
-        float distance = Vector3.Distance(transform.position, target.transform.position);
+        float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
         if (distance < attackRadius)
         {
             agent.isStopped = true;
@@ -188,17 +196,17 @@ public class EnemyController : MonoBehaviour
     public void AttackPlayer()
     {
         // attack and cause damage only if there is a target
-        if (target == null)
+        if (currentTarget == null)
         {
             return;
         }
-        if (target == player && !playerHealth.isDead)
+        if (currentTarget == player && !playerHealth.isDead)
         {
             playerHealth.TakeDamage(damage);
         }
-        if (target == friendlyBase)
+        if (currentTarget == enemyBase)
         {
-            baseHealth.TakeDamage(damage);
+            enemyBaseHealth.TakeDamage(damage);
         }
     }
 }
