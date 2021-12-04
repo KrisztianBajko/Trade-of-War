@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class BaseHealth : MonoBehaviour
 {
-    public bool isStanding;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public bool isStanding = true;
+    public float currentHealth;
+    public float maxHealth;
 
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        if(currentHealth <= 0)
+        {
+            currentHealth = 0;
+            Destroy(gameObject);
+        }
     }
     public void TakeDamage(float dmg)
     {
-
+        currentHealth -= dmg;
     }
 }

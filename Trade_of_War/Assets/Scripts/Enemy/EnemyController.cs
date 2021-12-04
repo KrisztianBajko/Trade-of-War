@@ -46,7 +46,6 @@ public class EnemyController : MonoBehaviour
     public float acceptableDistanceFromPlayer;
     private void Start()
     {
-        
         enemyBase = GameObject.Find("FriendlyBase");
 
         enemyBaseHealth = enemyBase.GetComponent<BaseHealth>();
@@ -77,24 +76,70 @@ public class EnemyController : MonoBehaviour
             agent.enabled = false;
             return;
         }
+
+        DetectTarget();
         // check the distance between targets and enemy
         CheckDistance();
-        // if the distance between player and enemy is bigger then the search raduis then evade and go back to the lane otherwise chase the player
+        // look at the target the enemy goes 
+        LookAt();
+        // set the destination to target position
+        agent.SetDestination(currentTarget.transform.position);
+    }
+
+   /* private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, searchRadius);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, acceptableDistanceFromPlayer);
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, acceptableDistanceFromLane);
+        Gizmos.color = Color.blue;
+        
+    }*/
+    void CheckDistance()
+    {
+        // check the distance between the targets and the enemy
+        distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+        distanceToBase = Vector3.Distance(transform.position, enemyBase.transform.position);
+        //TODO : if the minion gets too far from the lane, evade and go back
+    }
+    void ChasePlayer()
+    {
+        // if the player is not dead or the player is too far from enemy then go back to lane
+        // otherwise chase the player and attack
+        if (playerHealth.isDead || distanceToPlayer > acceptableDistanceFromPlayer)
+        {
+            anim.SetBool("isAttacking", false);
+            anim.SetBool("isRunning", true);
+            currentTarget = waypoints[currentWaypoint];
+        }
+        else
+        {
+            if (currentTarget == player)
+            {
+                Attack();
+            }
+        }
+    }
+    
+ 
+    
+    void DetectTarget()
+    {
+        //TODO: if the minion sees the player start running towards the player in an higher speed
         if (distanceToPlayer < searchRadius)
         {
-            if (evade)
-            {
-                currentTarget = waypoints[currentWaypoint];
-            }
-            else
-            {
-                ChasePlayer();
-            }
+
+            currentTarget = player;
+
+            ChasePlayer();
+            
         }
         // if the distance between the enemy base and the enemy is less then the search raduis and the base is still standning
         // attack the enemy base, otherwise just stop the agent
         else if (distanceToBase < searchRadius)
         {
+            currentTarget = enemyBase;
             if (!enemyBaseHealth.isStanding)
             {
                 agent.isStopped = true;
@@ -111,55 +156,11 @@ public class EnemyController : MonoBehaviour
         {
             FollowPath();
         }
-        // look at the target the enemy goes 
-        LookAt();
-        // set the destination to target position
-        agent.SetDestination(currentTarget.transform.position);
-    }
-    void CheckDistance()
-    {
-        // check the distance between the targets and the enemy
-        distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-        distanceToBase = Vector3.Distance(transform.position, enemyBase.transform.position);
-        distanceToLane = Vector3.Distance(transform.position, waypoints[currentWaypoint].transform.position);
-        // check if the enemy is too far from the lane so it will goes back 
-        if (distanceToLane > acceptableDistanceFromLane)
-        {
-            evade = true;
-        }
-    }
-    void ChasePlayer()
-    {
-        // if the player is not dead or the player is too far from enemy then go back to lane
-        // otherwise chase the player and attack
-        if (playerHealth.isDead || distanceToPlayer > acceptableDistanceFromPlayer)
-        {
-            anim.SetBool("isAttacking", false);
-            anim.SetBool("isRunning", true);
-            currentTarget = waypoints[currentWaypoint];
-        }
-        else
-        {
-            currentTarget = player;
-            if (currentTarget == player)
-            {
-                Attack();
-            }
-        }
-    }
-    void AttackTheEnemyBase()
-    {
-        // if the target is the enemy base then attack 
-        currentTarget = enemyBase;
-        if (currentTarget == enemyBase)
-        {
-            Attack();
-        }
     }
     void FollowPath()
     {
         // follow the path if the enemy close enough to the next waypoint then target is the next waypoint
-        if (agent.remainingDistance < 0.5f)
+        if (agent.remainingDistance < .5f)
         {
             evade = false;
             currentWaypoint++;
@@ -207,6 +208,14 @@ public class EnemyController : MonoBehaviour
         if (currentTarget == enemyBase)
         {
             enemyBaseHealth.TakeDamage(damage);
+        }
+    }
+    void AttackTheEnemyBase()
+    {
+        // if the target is the enemy base then attack 
+        if (currentTarget == enemyBase)
+        {
+            Attack();
         }
     }
 }
