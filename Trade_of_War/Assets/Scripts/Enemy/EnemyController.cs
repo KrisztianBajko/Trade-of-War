@@ -8,8 +8,7 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator anim;
     private BaseHealth enemyBaseHealth;
-    private PlayerHealth playerHealth;
-    private EnemyHealth enemyHealth;
+    private Stats playerStatScript;
     // reference for enemy base
     private GameObject enemyBase;
     // current target
@@ -47,12 +46,10 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         enemyBase = GameObject.Find("FriendlyBase");
-
+        playerStatScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>();
         enemyBaseHealth = enemyBase.GetComponent<BaseHealth>();
         // find player by name
         player = GameObject.FindGameObjectWithTag("Player");
-        //reference for player health script
-        playerHealth = player.GetComponent<PlayerHealth>();
         // find all the waypoints
         waypoints = GameObject.FindGameObjectsWithTag("Waypoints");
         // get the animator componenet
@@ -65,17 +62,15 @@ public class EnemyController : MonoBehaviour
         anim.SetFloat("speed", moveSpeed);
         // set the enemy attack speed
         anim.SetFloat("attackSpeed", attackSpeed);
-        // get the enemy health script
-        enemyHealth = GetComponent<EnemyHealth>();
     }
     private void Update()
     {
-        if (enemyHealth.isDead)
+      /*  if (enemyHealth.isDead)
         {
             enemyHealth.enabled = false;
             agent.enabled = false;
             return;
-        }
+        }*/
 
         DetectTarget();
         // check the distance between targets and enemy
@@ -107,7 +102,7 @@ public class EnemyController : MonoBehaviour
     {
         // if the player is not dead or the player is too far from enemy then go back to lane
         // otherwise chase the player and attack
-        if (playerHealth.isDead || distanceToPlayer > acceptableDistanceFromPlayer)
+        if (distanceToPlayer > acceptableDistanceFromPlayer)
         {
             anim.SetBool("isAttacking", false);
             anim.SetBool("isRunning", true);
@@ -201,9 +196,9 @@ public class EnemyController : MonoBehaviour
         {
             return;
         }
-        if (currentTarget == player && !playerHealth.isDead)
+        if (currentTarget == player)
         {
-            playerHealth.TakeDamage(damage);
+          //  playerHealth.TakeDamage(damage);
         }
         if (currentTarget == enemyBase)
         {

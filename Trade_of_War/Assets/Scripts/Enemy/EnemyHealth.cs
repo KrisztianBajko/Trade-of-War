@@ -1,31 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class EnemyHealth : MonoBehaviour
 {
-    public float currentHealth;
-    public float maxHealth;
-    public bool isDead;
-    // Start is called before the first frame update
+    public Slider enemySlider3D;
+
+    public Stats statScript;
     void Start()
     {
-        
+        enemySlider3D = GetComponentInChildren<Slider>();
+
+
+        enemySlider3D.maxValue = statScript.maxHealth;
+        statScript.health = statScript.maxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(currentHealth <= 0)
-        {
-            currentHealth = 0;
-            Destroy(gameObject);
-        }
-    }
-
-    public void TakeDamage(float dmg)
-    {
-        currentHealth -= dmg;
-        Debug.Log(currentHealth);
+        enemySlider3D.value = statScript.health;
     }
 }
