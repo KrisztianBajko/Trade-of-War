@@ -5,15 +5,16 @@ using UnityEngine;
 using UnityEngine.AI;
 public class PlayerController : MonoBehaviour
 {
-    public Animator animator;
-    private float motionSmoothTime = .1f;
-    public NavMeshAgent agent;
-
-    Camera cam;
     public float rotateSpeedMovement = 0.1f;
     public float rotateVelocity;
 
+    private float motionSmoothTime = .1f;
+
+    public NavMeshAgent agent;
+
     private HeroCombat heroCombatScript;
+    private Animator animator;
+    private Camera cam;
     private void Start()
     {
         cam = Camera.main;

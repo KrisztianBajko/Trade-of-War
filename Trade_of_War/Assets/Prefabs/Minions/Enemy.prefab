@@ -326,8 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6501c217a3d4c0947a1d22a06dffaef7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySlider3D: {fileID: 859125937}
-  statScript: {fileID: 122460458}
+  enemyStatScript: {fileID: 122460458}
 --- !u!1 &1628838708
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,7 +485,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3663397254574700599}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1
+  m_Radius: 1.5
   m_Speed: 8
   m_Acceleration: 100
   avoidancePriority: 50
@@ -544,6 +543,7 @@ MonoBehaviour:
   attackSpeed: 1
   attackTime: 1.4
   experienceValue: 5
+  isAlive: 0
 --- !u!114 &1353740646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,6 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 641eddce4c7425d4faace680eb49efd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyAttackType: 0
   waypoints:
   - {fileID: 0}
   - {fileID: 0}
@@ -563,30 +564,20 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  currentWP: 1
+  nearestWayPoint: {fileID: 0}
   speed: 10
   rotationSpeed: 10
   turningDistance: 4
-  enemyAttackType: 0
-  anim: {fileID: 3663397254574700607}
-  agent: {fileID: 3663397254574700606}
+  motionSmoothTime: 0.1
   searchRadius: 20
-  nearestTarget: {fileID: 0}
+  attackRange: 5.5
+  evadeDistance: 22
+  rotateVelocity: 2
+  rotateSpeedForAttack: 1
+  performMeleeAttack: 1
   targetLayer:
     serializedVersion: 2
     m_Bits: 64
-  attackRange: 5.5
-  rotateVelocity: 1
-  rotateSpeedForAttack: 1
-  motionSmoothTime: 0.1
-  basicAttackIdle: 0
-  isAlive: 0
-  performMeleeAttack: 1
-  performRangedAttack: 1
-  projPrefab: {fileID: 0}
-  projSpawnPoint: {fileID: 0}
-  evadeDistance: 22
-  nearestWayPoint: {fileID: 0}
 --- !u!1001 &3663397255243358399
 PrefabInstance:
   m_ObjectHideFlags: 0

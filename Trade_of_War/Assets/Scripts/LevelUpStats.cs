@@ -7,6 +7,7 @@ public class LevelUpStats : MonoBehaviour
 {
     public int level = 1;
     public float experience { get; private set; }
+
     public Text lvlText;
     public Image expBarImage;
 

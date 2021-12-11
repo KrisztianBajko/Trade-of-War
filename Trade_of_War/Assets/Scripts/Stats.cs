@@ -9,11 +9,13 @@ public class Stats : MonoBehaviour
     public float attackDamage;
     public float attackSpeed;
     public float attackTime;
-
-    HeroCombat heroCombatScript;
-
-    private GameObject player;
     public float experienceValue;
+
+    public bool isAlive;
+
+    private HeroCombat heroCombatScript;
+    private GameObject player;
+    
     private void Start()
     {
         heroCombatScript = GameObject.FindGameObjectWithTag("Player").GetComponent<HeroCombat>();
@@ -26,6 +28,7 @@ public class Stats : MonoBehaviour
     {
         if(health <= 0)
         {
+            isAlive = false;
             heroCombatScript.isAlive = false;
             Destroy(gameObject);
             heroCombatScript.targetedEnemy = null;

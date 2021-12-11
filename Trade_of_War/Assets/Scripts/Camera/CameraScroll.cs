@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CameraScroll : MonoBehaviour
 {
-    private Camera cam;
-    private float camFOV;
+    public float minFOV;
+    public float maxFOV;
     public float zoomSpeed;
 
+    private Camera cam;
+    private float camFOV;
     private float moseScrollInput;
-    // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
@@ -22,7 +23,7 @@ public class CameraScroll : MonoBehaviour
         moseScrollInput = Input.GetAxis("Mouse ScrollWheel");
 
         camFOV -= moseScrollInput * zoomSpeed;
-        camFOV = Mathf.Clamp(camFOV, 20, 60);
+        camFOV = Mathf.Clamp(camFOV, minFOV, maxFOV);
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, camFOV, zoomSpeed);
     }

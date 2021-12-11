@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Targetable : MonoBehaviour
 {
-    public enum EnemyType { Minion,Player,Base };
+    public enum EnemyType { Minion,Player,Base,Tower};
     public EnemyType enemyType;
+    
 }

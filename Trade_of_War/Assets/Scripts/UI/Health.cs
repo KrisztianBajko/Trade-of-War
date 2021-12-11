@@ -2,27 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class Health : MonoBehaviour
 {
     public Slider playerSlider3D;
-    Slider playerSlider2D;
+    public Slider playerSlider2D;
+    public TextMeshProUGUI healthText;
+    private Stats playerStatScript;
 
-    Stats statScript;
     void Start()
     {
-        statScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>();
-
-        playerSlider2D = GetComponent<Slider>();
-
-        playerSlider2D.maxValue = statScript.maxHealth;
-        playerSlider3D.maxValue = statScript.maxHealth;
-        statScript.health = statScript.maxHealth;
+        playerStatScript = GameObject.FindGameObjectWithTag("Player").GetComponent<Stats>();
+        playerSlider2D.maxValue = playerStatScript.maxHealth;
+        playerSlider3D.maxValue = playerStatScript.maxHealth;
+        playerStatScript.health = playerStatScript.maxHealth;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        playerSlider2D.value = statScript.health;
+        healthText.text = playerStatScript.health + " / " + playerStatScript.maxHealth;
+        playerSlider2D.value = playerStatScript.health;
         playerSlider3D.value = playerSlider2D.value;
     }
 }

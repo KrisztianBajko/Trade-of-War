@@ -5,18 +5,29 @@ using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public Stats towerStatScript;
+    public float searchRadius;
+    public string typeOfEnemy;
+
+    
     public GameObject projectilePrefab;
     public GameObject firePoint;
-    public LayerMask targetLayer;
-    public float searchRadius;
-    public GameObject nearestTarget;
-    public string typeOfEnemy;
+    public LayerMask enemyLayer;
+    public LayerMask friendlyLayer;
+
+    private Stats towerStatScript;
+    private GameObject nearestTarget;
+    private Animator anim;
 
     [Header("Ranged Varialbes")]
     public bool performRangedAttack = true;
-    public Animator anim;
 
+    
+
+    private void Start()
+    {
+        towerStatScript = GetComponent<Stats>();
+        anim = GetComponent<Animator>();
+    }
     private void Update()
     {
         SearchForTarget();
@@ -29,33 +40,36 @@ public class Tower : MonoBehaviour
     }
     void SearchForTarget()
     {
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius, targetLayer);
-        float minimumDistance = Mathf.Infinity;
-        foreach (Collider collider in hitColliders)
-        {
-            float distance = Vector3.Distance(transform.position, collider.transform.position);
-            if (distance < minimumDistance)
+        
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius, enemyLayer);
+            float minimumDistance = Mathf.Infinity;
+            foreach (Collider collider in hitColliders)
             {
-                minimumDistance = distance;
-                nearestTarget = collider.transform.gameObject;
+                float distance = Vector3.Distance(transform.position, collider.transform.position);
+                if (distance < minimumDistance)
+                {
+                    if (distance > searchRadius)
+                    {
+                        nearestTarget = null;
+                    }
+                    else
+                    {
+                        minimumDistance = distance;
+                        nearestTarget = collider.transform.gameObject;
+                    }
+
+                }
+
             }
-            else if(distance> searchRadius)
+            if (nearestTarget != null)
             {
-                nearestTarget = null;
+                if (performRangedAttack)
+                {
+                    StartCoroutine(RangedAttackInterval());
+                }
+
             }
-        }
-        if (nearestTarget != null)
-        {
-            if (performRangedAttack)
-            {
-                StartCoroutine(RangedAttackInterval());
-            }
-            
-        }
-        else
-        {
-            Debug.Log("There is no enemy in the given radius");
-        }
+        
     }
 
     IEnumerator RangedAttackInterval()

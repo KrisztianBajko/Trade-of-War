@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -8,6 +6,7 @@ public class CameraFollow : MonoBehaviour
     private Vector3 cameraOffset;
 
     [Range(0.01f, 1f)]
+    [Tooltip("How fast the camera will react for the player movement.")]
     public float smoothness = 0.5f;
     void Start()
     {

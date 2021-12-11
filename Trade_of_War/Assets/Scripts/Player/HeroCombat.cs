@@ -7,23 +7,22 @@ public class HeroCombat : MonoBehaviour
     public enum HeroAttackType { Melee, Ranged};
     public HeroAttackType heroAttackType;
 
+    [Header("Melee Variables")]
     public GameObject targetedEnemy;
     public float attackRange;
     public float rotateSpeedForAttack;
-
-    private PlayerController moveScript;
-    private Stats statsScript;
-    private Animator anim;
-
-    public bool basicAttackIdle = false;
-    public bool isAlive;
     public bool performMeleeAttack = true;
+    public bool isAlive;
+
 
     [Header("Ranged Varialbes")]
     public bool performRangedAttack = true;
     public GameObject projPrefab;
     public Transform projSpawnPoint;
 
+    private PlayerController moveScript;
+    private Stats statsScript;
+    private Animator anim;
     private void Start()
     {
         statsScript = GetComponent<Stats>();
@@ -54,7 +53,6 @@ public class HeroCombat : MonoBehaviour
                     moveScript.agent.SetDestination(transform.position);
                     if (performMeleeAttack)
                     {
-                        Debug.Log("Attack");
                         StartCoroutine(MeleeAttackIntercal());
                     }
                 }
@@ -145,6 +143,12 @@ public class HeroCombat : MonoBehaviour
             if(targetedEnemy.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Minion)
             {
                 targetedEnemy.GetComponent<Stats>().health -= statsScript.attackDamage;
+                moveScript.agent.stoppingDistance = 1;
+            }
+            else if(targetedEnemy.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Tower)
+            {
+                targetedEnemy.GetComponent<Stats>().health -= statsScript.attackDamage;
+                moveScript.agent.stoppingDistance = attackRange;
             }
         }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    //TODO: adjust the script to do not wait till the player kill all the minions before the next wave starts
     public enum SpawnState
     {
         SPAWNING,
@@ -14,16 +15,18 @@ public class SpawnManager : MonoBehaviour
    [System.Serializable]
     public class Wave
     {
-        public GameObject enemyPrefab;
+        public GameObject minionPrefab;
+        [Tooltip("The number of minions will spawn.")]
         public int count;
+        [Tooltip("The time between 2 minions spawned.")]
         public float rate;
     }
     public SpawnState state = SpawnState.COUNTING;
     public Wave[] waves;
     private int nextWave;
 
-    public Transform spawnPoint;
-
+    public Transform enemySpawnPoint;
+    public Transform allieSpawnPoint;
     public float timeBetweenWaves = 10f;
     public float waveCountDown;
 
@@ -92,7 +95,7 @@ public class SpawnManager : MonoBehaviour
         state = SpawnState.SPAWNING;
         for(int i=0; i< wave.count; i++)
         {
-            SpawnMinion(wave.enemyPrefab);
+            SpawnMinion(wave.minionPrefab);
             yield return new WaitForSeconds(1f / wave.rate);
         }
         
@@ -102,6 +105,7 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnMinion(GameObject minion)
     {
-        Instantiate(minion, spawnPoint.position, Quaternion.identity);
+        Instantiate(minion, enemySpawnPoint.position, Quaternion.identity);
+       // Instantiate(minion, allieSpawnPoint.position, Quaternion.identity);
     }
 }

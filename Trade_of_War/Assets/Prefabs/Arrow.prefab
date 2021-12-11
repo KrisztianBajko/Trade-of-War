@@ -108,9 +108,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef39f2d2958d37499935380d26930d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 55
   target: {fileID: 0}
   targetSet: 1
   targetType: Player
-  velocity: 5
+  velocity: 25
   stopProjectile: 0

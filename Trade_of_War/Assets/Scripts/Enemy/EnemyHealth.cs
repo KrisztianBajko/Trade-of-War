@@ -4,21 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 public class EnemyHealth : MonoBehaviour
 {
-    public Slider enemySlider3D;
+    private Slider enemySlider3D;
 
-    public Stats statScript;
+    public Stats enemyStatScript;
     void Start()
     {
         enemySlider3D = GetComponentInChildren<Slider>();
 
-
-        enemySlider3D.maxValue = statScript.maxHealth;
-        statScript.health = statScript.maxHealth;
+        enemySlider3D.maxValue = enemyStatScript.maxHealth;
+        enemyStatScript.health = enemyStatScript.maxHealth;
     }
 
     // Update is called once per frame
     void Update()
     {
-        enemySlider3D.value = statScript.health;
+        enemySlider3D.value = enemyStatScript.health;
     }
 }

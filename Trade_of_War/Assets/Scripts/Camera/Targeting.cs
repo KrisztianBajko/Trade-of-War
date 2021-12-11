@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Targeting : MonoBehaviour
 {
-    public GameObject selectedHero;
-    public bool heroPlayer;
+    private GameObject selectedHero;
     RaycastHit hit;
 
     private void Start()
@@ -25,6 +24,10 @@ public class Targeting : MonoBehaviour
                     if (hit.collider.GetComponent<Targetable>() != null)
                     {
                         if (hit.collider.gameObject.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Minion)
+                        {
+                            selectedHero.GetComponent<HeroCombat>().targetedEnemy = hit.collider.gameObject;
+                        }
+                        else if(hit.collider.gameObject.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Tower)
                         {
                             selectedHero.GetComponent<HeroCombat>().targetedEnemy = hit.collider.gameObject;
                         }
