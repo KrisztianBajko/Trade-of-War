@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
 
     void Update()
     {
-        healthText.text = playerStatScript.health + " / " + playerStatScript.maxHealth;
+        healthText.text = Mathf.CeilToInt(playerStatScript.health) + " / " + Mathf.CeilToInt(playerStatScript.maxHealth);
         playerSlider2D.value = playerStatScript.health;
         playerSlider3D.value = playerSlider2D.value;
     }

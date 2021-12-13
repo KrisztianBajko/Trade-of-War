@@ -38,6 +38,7 @@ public class HeroCombat : MonoBehaviour
             {
                 moveScript.agent.SetDestination(targetedEnemy.transform.position);
                 moveScript.agent.stoppingDistance = attackRange;
+                performMeleeAttack = true;
             }
             else
             {
@@ -148,7 +149,7 @@ public class HeroCombat : MonoBehaviour
             else if(targetedEnemy.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Tower)
             {
                 targetedEnemy.GetComponent<Stats>().health -= statsScript.attackDamage;
-                moveScript.agent.stoppingDistance = attackRange;
+                moveScript.agent.stoppingDistance = 8;
             }
         }
 

@@ -12,7 +12,7 @@ public class Tower : MonoBehaviour
     public GameObject projectilePrefab;
     public GameObject firePoint;
     public LayerMask enemyLayer;
-    public LayerMask friendlyLayer;
+    public LayerMask allieLayer;
 
     private Stats towerStatScript;
     private GameObject nearestTarget;
@@ -90,6 +90,10 @@ public class Tower : MonoBehaviour
         if (nearestTarget != null)
         {
             if (nearestTarget.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Player)
+            {
+                SpawnRangedProj(typeOfEnemy, nearestTarget);
+            }
+            else if (nearestTarget.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Minion)
             {
                 SpawnRangedProj(typeOfEnemy, nearestTarget);
             }

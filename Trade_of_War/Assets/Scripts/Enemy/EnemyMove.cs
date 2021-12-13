@@ -58,6 +58,7 @@ public class EnemyMove : MonoBehaviour
     }
     void Update()
     {
+        
         SearchForTarget();
         if (nearestTarget != null)
         {
@@ -133,12 +134,18 @@ public class EnemyMove : MonoBehaviour
                 if (nearestTarget.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Player)
                 {
                     nearestTarget.GetComponent<Stats>().health -= enemyStatsScript.attackDamage;
+                nearestTarget.GetComponent<Teleport>().isTeleporting = false;
                     attackRange = 4f;
                 }
                 else if (nearestTarget.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Base)
                 {
                     nearestTarget.GetComponent<Stats>().health -= enemyStatsScript.attackDamage;
                     attackRange = 7f;
+                }
+                else if(nearestTarget.GetComponent<Targetable>().enemyType == Targetable.EnemyType.Tower)
+                {
+                nearestTarget.GetComponent<Stats>().health -= enemyStatsScript.attackDamage;
+                attackRange = 7f;
                 }
             }
 

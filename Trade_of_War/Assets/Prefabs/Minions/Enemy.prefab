@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 122460457}
   - component: {fileID: 122460458}
   - component: {fileID: 1353740646}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f723acbdba2a8b74fa7b9a460d2272b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 75
   health: 0
   attackDamage: 10
   attackSpeed: 1
@@ -577,7 +577,7 @@ MonoBehaviour:
   performMeleeAttack: 1
   targetLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 256
 --- !u!1001 &3663397255243358399
 PrefabInstance:
   m_ObjectHideFlags: 0

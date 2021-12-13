@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Targeting : MonoBehaviour
 {
+    public LayerMask enemyLayer;
     private GameObject selectedHero;
     RaycastHit hit;
 
@@ -18,7 +19,8 @@ public class Targeting : MonoBehaviour
             //targeting minion
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity))
+                
+                if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity,enemyLayer))
                 {
                     //if the minion is targetable
                     if (hit.collider.GetComponent<Targetable>() != null)

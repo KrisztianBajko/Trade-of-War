@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     public NavMeshAgent agent;
 
+    private Teleport teleportScript;
     private HeroCombat heroCombatScript;
     private Animator animator;
     private Camera cam;
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour
         agent.GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         heroCombatScript = GetComponent<HeroCombat>();
+        teleportScript = GetComponent<Teleport>();
+        
     }
     private void Update()
     {
@@ -35,7 +38,7 @@ public class PlayerController : MonoBehaviour
             }
             
         }
-
+        
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -49,6 +52,8 @@ public class PlayerController : MonoBehaviour
                     agent.SetDestination(hit.point);
                     heroCombatScript.targetedEnemy = null;
                     agent.stoppingDistance = 0;
+                    teleportScript.isTeleporting = false;
+
 
                     //rotation
                     //TODO: fix rotation bug
@@ -72,6 +77,7 @@ public class PlayerController : MonoBehaviour
 
 
     }
+    
     
 }
 
